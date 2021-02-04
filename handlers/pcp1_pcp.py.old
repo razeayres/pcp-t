@@ -1,0 +1,124 @@
+import os, re
+
+class pcp_pcp1(object):
+    def __init__(self, f):
+        self.f = f
+        self.lines = []
+        self.stations = None
+        self.lat = None
+        self.lon = None
+        self.elev = None
+        self.data = []
+    
+    def get_lines(self):
+        with open(f, 'r') as reader:
+            r = []
+            for i in reader:
+                self.lines.append(i.replace("\n",""))
+
+    def remove_spaces(self, l):
+        r = []
+        for i in l:
+            if not i == "":
+                r.append(i)
+        return(r)
+
+    def split_every(self, n, s):
+        r = []
+        for i in xrange(0, len(s), n):
+            r.append(s[i:i+n])
+        return(r)
+
+    def round_number(self, i):
+        i = float(i)
+        i = str("%05.1f" % i)
+        return(i)
+
+    def remove_station(self, n):
+        self.get_lines()
+
+        # Initializes the first lines
+        h = self.lines[0]
+        x = self.lines[2]
+        y = self.lines[1]
+        z = self.lines[3]
+
+        # Processing the header
+        h = h.split(" ")
+        h = self.remove_spaces(h)
+        h = h[1].split(",")
+        h = self.remove_spaces(h)
+        h.remove(h[n])
+        self.stations = h
+
+        # Processing the long values
+        x = x.split(" ")
+        x = self.remove_spaces(x)
+        x = self.split_every(5, x[1])
+        x.remove(x[n])
+        self.lon = x
+
+        # Processing the lat values
+        y = y.split(" ")
+        y = self.remove_spaces(y)
+        y = y[1:]
+        y.remove(y[n])
+        self.lat = y
+
+        # Processing the lat values
+        z = z.split(" ")
+        z = self.remove_spaces(z)
+        z = z[1:]
+        z.remove(z[n])
+        self.elev = z
+
+        # Processing the rest
+        for i in self.lines[4:]:
+            i = i.replace("\n","")
+            i = i[7:]
+            i = self.split_every(5, i)
+            i = map(self.round_number, i)
+            i.remove(i[n])
+            self.data.append(i)
+
+    def write_file(self):
+        with open("saida.txt", 'w') as writer:
+            stations = "Station  " + ",".join(self.stations) + '\n'
+            lat = "Lati    " + " ".join(self.lat) + '\n'
+            lon = "Long   " + "".join(self.lon) + '\n'
+            elev = "Elev     " + "  ".join(self.elev) + '\n'
+            writer.write(stations)
+            writer.write(lat)
+            writer.write(lon)
+            writer.write(elev)
+            for i in zip(self.lines[4:], self.data):
+                s, d = i
+                s = s.replace("\n","")
+                s = s[:7]
+                l = s + "".join(d) + '\n'
+                writer.write(l)
+
+
+
+dirName = r"C:\Projetos_SUPer"
+fileName = "pcp1.pcp"
+
+f = os.path.join(dirName, fileName)
+a = pcp_pcp1(f)
+a.remove_station(1)
+a.write_file()
+
+# import time
+# f = {}
+# for i in range(len(self.data[0])):
+#     e = 0
+#     d = 0
+#     for j in self.data:
+#         l = str(j[i]).split(".")
+#         if e < len(l[0]):
+#             e = len(l[0])
+#         if d < len(l[1]):
+#             d = len(l[1])
+#     f[i] = (e, d)
+
+# print f
