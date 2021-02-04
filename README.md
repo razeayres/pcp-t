@@ -8,4 +8,4 @@ pcp-t is a recursive selector for SWAT rainfall stations. It removes stations fr
 
 ### Package usage
 
-A new interface is being developed, however it can be already used by modyfing this [line](https://example.com) in the [main.py](https://example.com)
+A new interface is being developed, however it can be already used by modyfing this [line](https://github.com/razeayres/pcp-t/blob/a6fdfacd2db9e6ddab7c9336af182f63299d9790/main.py#L10) in the [main.py](https://github.com/razeayres/pcp-t/blob/master/main.py).
