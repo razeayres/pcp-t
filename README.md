@@ -1,4 +1,4 @@
-# pcp-t -  precipitation tester for SWAT models
+# pcp-t - precipitation tester for SWAT models
 ###### *Rodrigo de Queiroga Miranda*
 
 ###### Contact: rodrigo.qmiranda@gmail.com
